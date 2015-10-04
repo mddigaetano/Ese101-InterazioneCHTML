@@ -5,6 +5,7 @@
 #define MAX_STRLEN 25                                                           //lunghezza massima stringhe;
 #define FNAME_TXT "NamesRoles.txt"                                              //nome file txt;
 #define FNAME_HTML "Compito.html"                                               //nome file html;
+#define FNAME_JS "script.js"                                                                //nome file javascript;
 
 typedef struct s_element{                                                       //definizione di lista per salvare nomi-ruoli;
     char name[MAX_STRLEN+1];
@@ -49,6 +50,31 @@ int main(int argc, char** argv) {
     
     if(fclose(txt))                                                             //controllo validità chiusura file || ERROR N°2;
         exit(2);
+    
+    if(!(html = fopen(FNAME_HTML,"w")))                                         //controllo validità apertura file || ERROR N°3;
+        exit(3);
+    
+    fprintf(html,"<!DOCTYPE html>\n");                                          //inizio stampa html;
+    fprintf(html,"<html>\n\t<head>\n\t\t<title>Compito Informatica</title>\n\t\t<script src=%s></script>\n\t</head>\n",FNAME_JS);
+    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" onchange=\"printNames()\">\n");
+ 
+    strcpy(tempRole, first->role);
+    fprintf(html,"\t\t\t<option value=\"%s", first->name);
+    for(browse=first->next; browse!=NULL;browse=browse->next){
+        if(strcmp(tempRole,browse->role)==0){
+            fprintf(html,"<br>%s",browse->name);
+        }
+        else{
+            fprintf(html,"\">%s</option>\n",tempRole);
+            strcpy(tempRole,browse->role);
+            fprintf(html,"\t\t\t<option value=\"%s",browse->name);
+        }
+    }
+    fprintf(html,"\">%s</option>\n",tempRole);
+    
+    fprintf(html,"\t\t</select>\n");
+    fprintf(html,"\t\t<div id=\"nameList\"></div>\n");
+    fprintf(html,"\t</body>\n</html>");
     
     return (EXIT_SUCCESS);
 }
