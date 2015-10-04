@@ -14,7 +14,7 @@ typedef struct s_element{                                                       
 }element;
 
 void addAtPosition(element **pfirst, char name[], char role[], int position);   //prototipo funzione di aggiunta, in qualsiasi posizione, di un elemento in una lista;
-void printList(element *first);                                                 //stampa lista || SOLO DEBUG!!!
+void emptyList(element *first);                                                 //prototipo deallocazione lista;
 
 int main(int argc, char** argv) {
     FILE *txt, *html;                                                           //puntatori per i file da aprire;
@@ -45,8 +45,6 @@ int main(int argc, char** argv) {
         
         addAtPosition(&first, tempName, tempRole, i);                           //aggiunta in lista in modo ordinato;
     }
-
-    printList(first);                                                           //stampa lista || SOLO DEBUG!!!
     
     if(fclose(txt))                                                             //controllo validità chiusura file || ERROR N°2;
         exit(2);
@@ -58,23 +56,28 @@ int main(int argc, char** argv) {
     fprintf(html,"<html>\n\t<head>\n\t\t<title>Compito Informatica</title>\n\t\t<script src=%s></script>\n\t</head>\n",FNAME_JS);
     fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" onchange=\"printNames()\">\n");
  
-    strcpy(tempRole, first->role);
+    strcpy(tempRole, first->role);                                              //inizializzazione prima option;
     fprintf(html,"\t\t\t<option value=\"%s", first->name);
-    for(browse=first->next; browse!=NULL;browse=browse->next){
-        if(strcmp(tempRole,browse->role)==0){
-            fprintf(html,"<br>%s",browse->name);
+    for(browse=first->next; browse!=NULL;browse=browse->next){                  //finchè non termina la lista;
+        if(strcmp(tempRole,browse->role)==0){                                   //se il ruolo non è cambiato
+            fprintf(html,"<br>%s",browse->name);                                //scrvi su value;
         }
         else{
-            fprintf(html,"\">%s</option>\n",tempRole);
-            strcpy(tempRole,browse->role);
-            fprintf(html,"\t\t\t<option value=\"%s",browse->name);
+            fprintf(html,"\">%s</option>\n",tempRole);                          //altrimenti chiudi option,
+            strcpy(tempRole,browse->role);                                      //cambia ruolo corrente,
+            fprintf(html,"\t\t\t<option value=\"%s",browse->name);              //e iniziane uno nuovo;
         }
     }
     fprintf(html,"\">%s</option>\n",tempRole);
     
-    fprintf(html,"\t\t</select>\n");
-    fprintf(html,"\t\t<div id=\"nameList\"></div>\n");
-    fprintf(html,"\t</body>\n</html>");
+    fprintf(html,"\t\t</select>\n");                                            //fine select;
+    fprintf(html,"\t\t<div id=\"nameList\"></div>\n");                          //div dove verranno stampati i nomi;
+    fprintf(html,"\t</body>\n</html>");                                         //fine pagina html;
+    
+    if(fclose(html))                                                            //controllo validità chiusura file || ERROR N°4;
+        exit(4);
+    
+    emptyList(first);                                                           //deallocazione lista;
     
     return (EXIT_SUCCESS);
 }
@@ -100,11 +103,14 @@ void addAtPosition(element **pfirst, char name[], char role[], int position){   
     return;
 }
 
-void printList(element *first){                                                 //stampa lista || SOLO DEBUG!!!
+void emptyList(element *first){
+    element *temp=NULL;
     
     while(first != NULL){
-        printf("Nome: %s\n",first->name);
-        printf("Ruolo: %s\n",first->role);
-        first=first->next;
+        temp=first->next;
+        free(first);
+        first=temp;
     }
+    
+    return;
 }
