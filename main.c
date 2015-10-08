@@ -54,21 +54,21 @@ int main(int argc, char** argv) {
     
     fprintf(html,"<!DOCTYPE html>\n");                                          //inizio stampa html;
     fprintf(html,"<html>\n\t<head>\n\t\t<title>Compito Informatica</title>\n\t\t<script src=%s></script>\n\t</head>\n",FNAME_JS);
-    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" onchange=\"printNames()\">\n");
+    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" autofocus onchange=\"printNames()\">\n");
  
     strcpy(tempRole, first->role);                                              //inizializzazione prima option;
-    fprintf(html,"\t\t\t<option value=\"%s", first->name);
+    fprintf(html,"\t\t\t<option value='[\"%s\"", first->name);
     for(browse=first->next; browse!=NULL;browse=browse->next){                  //finchè non termina la lista;
         if(strcmp(tempRole,browse->role)==0){                                   //se il ruolo non è cambiato
-            fprintf(html,"<br>%s",browse->name);                                //scrvi su value;
+            fprintf(html,",\"%s\"",browse->name);                                //scrvi su value;
         }
         else{
-            fprintf(html,"\">%s</option>\n",tempRole);                          //altrimenti chiudi option,
+            fprintf(html,"]'>%s</option>\n",tempRole);                          //altrimenti chiudi option,
             strcpy(tempRole,browse->role);                                      //cambia ruolo corrente,
-            fprintf(html,"\t\t\t<option value=\"%s",browse->name);              //e iniziane uno nuovo;
+            fprintf(html,"\t\t\t<option value='[\"%s\"",browse->name);              //e iniziane uno nuovo;
         }
     }
-    fprintf(html,"\">%s</option>\n",tempRole);
+    fprintf(html,"]'>%s</option>\n",tempRole);
     
     fprintf(html,"\t\t</select>\n");                                            //fine select;
     fprintf(html,"\t\t<div id=\"nameList\"></div>\n");                          //div dove verranno stampati i nomi;

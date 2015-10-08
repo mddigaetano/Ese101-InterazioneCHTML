@@ -5,10 +5,10 @@
 		<script src=script.js></script>
 	</head>
 	<body>
-		<select id="tendina" onchange="printNames()">
-			<option value="Romana<br>Rita">Dirigente</option>
-			<option value="Daniela<br>Maria Teresa<br>Gianni Mario">Docente</option>
-			<option value="Nicola<br>Francesco<br>Nicolo'<br>Amedeo">Studente</option>
+		<select id="tendina" autofocus onchange="printNames()">
+			<option value='["Romana","Rita"]'>Dirigente</option>
+			<option value='["Daniela","Maria Teresa","Gianni Mario"]'>Docente</option>
+			<option value='["Nicola","Francesco","Ciro","Amedeo"]'>Studente</option>
 		</select>
 		<div id="nameList"></div>
 	</body>
