@@ -5,7 +5,7 @@
 #define MAX_STRLEN 25                                                           //lunghezza massima stringhe;
 #define FNAME_TXT "NamesRoles.txt"                                              //nome file txt;
 #define FNAME_HTML "Compito.html"                                               //nome file html;
-#define FNAME_JS "script.js"                                                                //nome file javascript;
+#define FNAME_JS "script.js"                                                    //nome file javascript;
 
 typedef struct s_element{                                                       //definizione di lista per salvare nomi-ruoli;
     char name[MAX_STRLEN+1];
@@ -17,7 +17,7 @@ void addAtPosition(element **pfirst, char name[], char role[], int position);   
 void emptyList(element *first);                                                 //prototipo deallocazione lista;
 
 int main(int argc, char** argv) {
-    FILE *txt, *html;                                                           //puntatori per i file da aprire;
+    FILE *txt, *html, *js;                                                           //puntatori per i file da aprire;
     element *first = NULL, *browse = NULL;
     int ctrl = 1, i;
     char tempName[MAX_STRLEN+1];                                                //verrà utilizzata per memorizzare i dati dal file insieme a tempRole;
@@ -54,21 +54,17 @@ int main(int argc, char** argv) {
     
     fprintf(html,"<!DOCTYPE html>\n");                                          //inizio stampa html;
     fprintf(html,"<html>\n\t<head>\n\t\t<title>Compito Informatica</title>\n\t\t<script src=%s></script>\n\t</head>\n",FNAME_JS);
-    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" onchange=\"printNames()\">\n");
+    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" autofocus onchange=\"printNames()\">\n");
  
     strcpy(tempRole, first->role);                                              //inizializzazione prima option;
-    fprintf(html,"\t\t\t<option value=\"%s", first->name);
-    for(browse=first->next; browse!=NULL;browse=browse->next){                  //finchè non termina la lista;
-        if(strcmp(tempRole,browse->role)==0){                                   //se il ruolo non è cambiato
-            fprintf(html,"<br>%s",browse->name);                                //scrvi su value;
-        }
-        else{
-            fprintf(html,"\">%s</option>\n",tempRole);                          //altrimenti chiudi option,
-            strcpy(tempRole,browse->role);                                      //cambia ruolo corrente,
-            fprintf(html,"\t\t\t<option value=\"%s",browse->name);              //e iniziane uno nuovo;
+    fprintf(html,"\t\t\t<option>%s</option>\n", tempRole);
+    
+    for(browse=first->next; browse!=NULL; browse = browse->next){
+        if(strcmp(tempRole, browse->role)){
+            strcpy(tempRole,browse->role);
+            fprintf(html,"\t\t\t<option>%s</option>\n", tempRole);
         }
     }
-    fprintf(html,"\">%s</option>\n",tempRole);
     
     fprintf(html,"\t\t</select>\n");                                            //fine select;
     fprintf(html,"\t\t<div id=\"nameList\"></div>\n");                          //div dove verranno stampati i nomi;
@@ -76,6 +72,38 @@ int main(int argc, char** argv) {
     
     if(fclose(html))                                                            //controllo validità chiusura file || ERROR N°4;
         exit(4);
+    
+    if(!(js = fopen(FNAME_JS,"w")))                                           //controllo validità apertura file || ERROR N°5;
+        exit(5);
+    
+    fprintf(js,"function printNames(){\n");
+    
+    strcpy(tempRole, first->role);                                              
+    fprintf(js,"\tvar %s = '[\"%s\"", tempRole, first->name);
+    for(browse=first->next; browse!=NULL; browse = browse->next){
+        if(strcmp(tempRole, browse->role)){
+            fprintf(js,"]';\n");
+            strcpy(tempRole,browse->role);
+            fprintf(js,"\tvar %s = '[\"%s\"", tempRole, browse->name);
+        }
+        else{
+            fprintf(js ,", \"%s\"", browse->name);
+        }
+    }
+    fprintf(js,"]';\n");
+    
+    fprintf(js,"    var e = document.getElementById(\"tendina\");\n"
+            "    var array = JSON.parse(eval(e.options[e.selectedIndex].text));\n");
+    fprintf(js,"    array = array.sort();\n");
+    fprintf(js,"    i=0;\n"
+            "   document.getElementById('nameList').innerHTML = \"\";\n"
+            "   for(i=0;i<array.length;i++){\n"
+            "       document.getElementById('nameList').innerHTML += array[i]+\"<br>\";\n"
+            "   }\n"
+            "}\n");
+    
+    if(fclose(js))                                                              //controllo validità chiusura file || ERROR N°6;
+        exit(6);
     
     emptyList(first);                                                           //deallocazione lista;
     
