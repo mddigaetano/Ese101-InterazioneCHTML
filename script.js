@@ -9,3 +9,13 @@ function printNames(){
 		document.getElementById('nameList').innerHTML += array[i]+"<br>";
 	}
 }
+
+function hideShow(){
+	var div = document.getElementById('nameList');
+	if(div.style.display == "none"){
+		div.style.display = "block";
+	}
+	else{
+		div.style.display = "none";
+	}
+}

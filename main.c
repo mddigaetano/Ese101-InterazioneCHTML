@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     
     fprintf(html,"<!DOCTYPE html>\n");                                          //inizio stampa html;
     fprintf(html,"<html>\n\t<head>\n\t\t<title>Compito Informatica</title>\n\t\t<script src=%s></script>\n\t</head>\n",FNAME_JS);
-    fprintf(html,"\t<body>\n\t\t<select id=\"tendina\" autofocus onchange=\"printNames()\">\n");
+    fprintf(html,"\t<body onload=\"printNames()\">\n\t\t<select id=\"tendina\" autofocus onchange=\"printNames()\">\n");
  
     strcpy(tempRole, first->role);                                              //inizializzazione prima option;
     fprintf(html,"\t\t\t<option value='[\"%s\"", first->name);
@@ -71,6 +71,7 @@ int main(int argc, char** argv) {
     fprintf(html,"]'>%s</option>\n",tempRole);
     
     fprintf(html,"\t\t</select>\n");                                            //fine select;
+    fprintf(html,"\t\t<button type=\"button\" id=\"button\" onclick=\"hideShow()\">Mostra/Nascondi</button>\n");
     fprintf(html,"\t\t<div id=\"nameList\"></div>\n");                          //div dove verranno stampati i nomi;
     fprintf(html,"\t</body>\n</html>");                                         //fine pagina html;
     

@@ -4,12 +4,13 @@
 		<title>Compito Informatica</title>
 		<script src=script.js></script>
 	</head>
-	<body>
+	<body onload="printNames()">
 		<select id="tendina" autofocus onchange="printNames()">
 			<option value='["Romana","Rita"]'>Dirigente</option>
 			<option value='["Daniela","Maria Teresa","Gianni Mario"]'>Docente</option>
 			<option value='["Nicola","Francesco","Ciro","Amedeo"]'>Studente</option>
 		</select>
+		<button type="button" id="button" onclick="hideShow()">Mostra/Nascondi</button>
 		<div id="nameList"></div>
 	</body>
 </html>
